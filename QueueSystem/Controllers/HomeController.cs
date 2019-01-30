@@ -10,28 +10,25 @@ namespace QueueSystem.Controllers
 {
     public class HomeController : Controller
     {
-        public IActionResult Index()
+        public IActionResult Queue()
+        {
+            List<string> queueNos = new List<string>();
+            for (int i = 0; i < 3; i++) queueNos.Add("test");
+            ViewData["queueNos"] = queueNos;
+            return View();
+        }
+
+        public IActionResult Registration()
         {
             return View();
         }
 
-        public IActionResult About()
+        [HttpGet("/Home/Register/{qType}")]
+        public JsonResult Register(char qType)
         {
-            ViewData["Message"] = "Your application description page.";
-
-            return View();
-        }
-
-        public IActionResult Contact()
-        {
-            ViewData["Message"] = "Your contact page.";
-
-            return View();
-        }
-
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            QueueService qService = new QueueService();
+            Queue qNo = qService.Register((QueueType) qType);
+            return new JsonResult(qNo);
         }
     }
 }

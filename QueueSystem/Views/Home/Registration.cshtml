@@ -1,0 +1,42 @@
+﻿
+@{
+    ViewData["Title"] = "Registration";
+}
+
+<h2>Registration</h2>
+<div id="registrationMessage" class="alert alert-success" hidden>test</div>
+
+<input type="button" class="btn btn-primary" name="register" value="Register" onclick="register(isWalkIn=false)" />
+<input type="button" class="btn btn-primary" name="walkin" value="WalkIn" onclick="register(isWalkIn=true)" />
+
+
+
+<script>
+    var delayId; // delayId for identifying qhich timeout to clear
+
+    function delayTimer(func, ms) {
+        return setTimeout(func, ms)
+    }
+
+    const delay = (func, ms) => {
+        clearTimeout(delayId);
+        return new Promise(res => delayId=delayTimer(func, ms));
+    }
+        
+    async function register(isWalkIn) {
+        const url = '@Url.Action("Register", "Home")'; 
+        var qType = isWalkIn ? "W" : "R";
+        var result = await fetch(url + "/" + qType);
+        console.log(result);
+        var data = await result.json();
+
+        var queueNo = data.queueType + data.queueNo.toString().padStart(4, '0');
+        var message = document.getElementById("registrationMessage")
+
+        message.innerText = queueNo + " has been added to the queue";
+        message.hidden = false;
+        await delay(function () {
+            message.hidden = true
+        }, 5000);
+    }
+</script>

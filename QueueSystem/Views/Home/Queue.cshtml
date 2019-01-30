@@ -1,0 +1,10 @@
+﻿@{
+    ViewData["Title"] = "Queue";
+}
+
+<ul>
+    @foreach(string queueNo in (List<string>)ViewData["queueNos"]) 
+    {
+        <li>@queueNo</li>
+    }
+</ul>
